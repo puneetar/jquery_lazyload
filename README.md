@@ -1,4 +1,4 @@
-h1. Lazy Load Plugin for jQuery
+h1. Lazy Load Plugin for jQuery 
 
 Lazy Load delays loading of images in long web pages. Images outside of viewport wont be loaded before user scrolls to them. This is opposite of image preloading.
 
