@@ -1,6 +1,7 @@
 h1. Lazy Load Plugin for jQuery
 
 "This is a forked branch from tuupola":https://github.com/tuupola/jquery_lazyload
+For the changes I have made scroll to the ChangeLog.
 Lazy Load delays loading of images in long web pages. Images outside of viewport wont be loaded before user scrolls to them. This is opposite of image preloading.
 
 Using Lazy Load on long web pages containing many large images makes the page load faster. Browser will be in ready state after loading visible images. In some cases it can also help to reduce server load.
@@ -26,6 +27,15 @@ This causes all images of class lazy to be lazy loaded.
 
 
 h1. Changelog
+
+h2. Changes I made
+
+* The following changes will make more sense when used in a Single page web application
+* Added a Preload function : this allows to preload the specific number of images which are outside the viewport. And will be introduced to viewport next. This was done to improve the User Experience. As with lazy loading it was very broken.
+* Added a trigger_lazyload() : funation which triggers that lazyload. It could be used in places of collapse views. on Clicks. Or pagination (inside views).
+* Added bypass_lazyload : If it is set to true it will bypass the lazyloading and update all the <img src> with approporiate data when called. Should be used in case of complex cases when lazyloading does not function as expected.
+* JQUERY LAZYLOADING FOR MOBILE: "jquery.mobile.lalyload.js" this is more optimized and effecient version of mobile web apps. 
+*Includes events like "tap", "scrollstop" etc
 
 h2. 1.9.3
 
