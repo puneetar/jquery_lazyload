@@ -29,30 +29,48 @@
             skip_invisible  : true,
             appear          : null,
             load            : null,
+            preload			: 0,  //this is used to preload # images before they appear to viewport
+            bypass_lazy		: false, //this will bypass the lazy_loading and update src with the data_attribute
             placeholder     : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC"
         };
+        var preloadcounter	= 0;
 
         function update() {
+        	//console.log("preloadasdas : "+settings.preload + " preloadcounter : "+preloadcounter);
             var counter = 0;
-
             elements.each(function() {
-                var $this = $(this);
-                if (settings.skip_invisible && !$this.is(":visible")) {
-                    return;
-                }
-                if ($.abovethetop(this, settings) ||
-                    $.leftofbegin(this, settings)) {
-                        /* Nothing. */
-                } else if (!$.belowthefold(this, settings) &&
-                    !$.rightoffold(this, settings)) {
-                        $this.trigger("appear");
-                        /* if we found an image we'll load, reset the counter */
-                        counter = 0;
-                } else {
-                    if (++counter > settings.failure_limit) {
-                        return false;
-                    }
-                }
+            	var $this = $(this);
+            	if(settings.bypass_lazy)
+            		$this.trigger("appear");
+            	else{
+            		if (settings.skip_invisible && !$this.is(":visible")) {
+            			return;
+            		}
+            		if ($.abovethetop(this, settings) ||
+            				$.leftofbegin(this, settings)) {
+            			
+            			/* Nothing. */
+            		} else if (!$.belowthefold(this, settings) &&
+            				!$.rightoffold(this, settings)) {
+            			$this.trigger("appear");
+            			/* if we found an image we'll load, reset the counter */
+            			counter = 0;
+            		} else {
+            			if(preloadcounter < settings.preload 
+            					&& ( ! ($(this).attr("data-" + settings.data_attribute) == $(this).attr("src")) )
+            					&& !this.loaded){
+            				preloadcounter++;
+            				//console.log("inside preloading "+$(this).attr("data-" + settings.data_attribute) + "  preloadasdas : "+settings.preload + " preloadcounter : "+preloadcounter);
+            				$this.trigger("appear",["preload"]);
+            			}
+            			
+            			if (++counter > settings.failure_limit) {
+            				return false;
+            			}
+
+            			
+            		}
+            	}
             });
 
         }
@@ -81,6 +99,21 @@
                 return update();
             });
         }
+        
+        $container.bind("tap", function() {
+            return update();
+        });
+        $container.bind("click", function() {
+            return update();
+        });
+        $container.bind("scrollstop", function() {
+            return update();
+        });
+//        $container.bind("updatelayout", function() {
+//            return update();
+//        });
+        
+     
 
         this.each(function() {
             var self = this;
@@ -96,7 +129,7 @@
             }
 
             /* When appear is triggered load original image. */
-            $self.one("appear", function() {
+            $self.one("appear", function(event , param) {
                 if (!this.loaded) {
                     if (settings.appear) {
                         var elements_left = elements.length;
@@ -109,6 +142,12 @@
                             $self.hide();
                             if ($self.is("img")) {
                                 $self.attr("src", original);
+                                //console.log("appear..asdtrigger : "+preloadcounter+ " paramenter: "+param);
+                                if(!(param == 'preload')){
+                                	//console.log("***********");
+                                	preloadcounter = 0;
+                                	update();
+                                }
                             } else {
                                 $self.css("background-image", "url('" + original + "')");
                             }
@@ -170,6 +209,9 @@
             update();
         });
 
+        $(document).on("trigger_lazyload", function() {
+            return update();
+        });
         return this;
     };
 
@@ -246,3 +288,12 @@
     });
 
 })(jQuery, window, document);
+
+function trigger_lazyload(){
+	console.log("triggering lazy load");
+	$.event.trigger({
+		type: "trigger_lazyload",
+		message: " triggering update method on lazy load",
+		time: new Date()
+	});
+}
