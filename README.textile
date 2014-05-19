@@ -1,5 +1,5 @@
 h1. Lazy Load Plugin for jQuery
-
+"This is a forked branch from tuupola":https://github.com/tuupola/jquery_lazyload
 Lazy Load delays loading of images in long web pages. Images outside of viewport wont be loaded before user scrolls to them. This is opposite of image preloading.
 
 Using Lazy Load on long web pages containing many large images makes the page load faster. Browser will be in ready state after loading visible images. In some cases it can also help to reduce server load.
@@ -23,15 +23,6 @@ then in your code do:
 
 This causes all images of class lazy to be lazy loaded.
 
-More information on "Lazy Load":http://www.appelsiini.net/projects/lazyload project page.
-
-h4. Install with "bower":http://bower.io
-
-<pre>$ bower install jquery.lazyload</pre>
-
-h1. License
-
-All code licensed under the "MIT License":http://www.opensource.org/licenses/mit-license.php. All images licensed under "Creative Commons Attribution 3.0 Unported License":http://creativecommons.org/licenses/by/3.0/deed.en_US. In other words you are basically free to do whatever you want. Just don't remove my name from the source.
 
 h1. Changelog
 
